@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       default-lazy-init="true" default-init-method="init">
+
+    <context:property-placeholder location="classpath:config.properties"/>
+
+    <!-- ===========base=====start============  -->
+    <bean id="clickHouseDataSource" class="com.zaxxer.hikari.HikariDataSource">
+        <property name="jdbcUrl" value="${clickhouse.url}"/>
+        <property name="username" value="${clickhouse.user}"/>
+        <property name="password" value="${clickhouse.password}"/>
+        <property name="driverClassName" value="ru.yandex.clickhouse.ClickHouseDriver"/>
+        <property name="maximumPoolSize" value="10"/>
+        <property name="minimumIdle" value="2"/>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg ref="clickHouseDataSource"/>
+    </bean>
+
+    <bean id="clickHouseDataService" class="com.yf.service.ClickHouseDataService">
+        <property name="jdbcTemplate" ref="jdbcTemplate"/>
+    </bean>
+    <!-- ===========base=====end============  -->
+
+
+</beans>
