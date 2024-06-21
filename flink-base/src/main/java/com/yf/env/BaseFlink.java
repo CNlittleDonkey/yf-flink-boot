@@ -10,15 +10,16 @@ import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer;
+import org.apache.flink.connector.kafka.source.reader.deserializer.KafkaRecordDeserializationSchema;
 import org.apache.flink.contrib.streaming.state.RocksDBStateBackend;
 import org.apache.flink.runtime.state.StateBackend;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.CheckpointConfig;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
-//import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import org.apache.flink.util.Preconditions;
 import org.joda.time.DateTime;
+import org.apache.flink.kafka.shaded.org.apache.kafka.clients.consumer.OffsetResetStrategy;
+import org.apache.flink.kafka.shaded.org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -121,25 +122,19 @@ public abstract class BaseFlink {
 
     protected DataStream<String> getKafkaSpout(String topic) {
         String bootstrapServers = properties.getProperty("bootstrap.servers", "");
-        String port = properties.getProperty("kafka.offset.Port", "");
-        String id = StringUtils.join(getJobName(), "-", topic);
-        Properties kafkaPro = new Properties();
-        kafkaPro.setProperty("bootstrap.servers", bootstrapServers + ":" + port);
-        kafkaPro.setProperty("group.id", id);
-        System.out.println("-------------->>>>>>>>>>>>>>>>>> consumer name is :" + id);
-        FlinkKafkaConsumer<String> stringFlinkKafkaConsumer = new FlinkKafkaConsumer<>(topic, new SimpleStringSchema(), kafkaPro);
-        stringFlinkKafkaConsumer.setStartFromEarliest();
-
-    /*    KafkaSource<String> source = KafkaSource.<String>builder()
-                .setBootstrapServers("10.10.5.152:9092")
-                .setTopics("ibtes_cloud_collect_powertrain_battery")
-                .setGroupId("flink-group-11")
-                .setStartingOffsets(OffsetsInitializer.earliest())
-                .setValueOnlyDeserializer(new SimpleStringSchema())
+        String readTopic = properties.getProperty("read-topic", "");
+        String groupId = properties.getProperty("groupId","");
+        KafkaSource<String> kafkaSource = KafkaSource.<String>builder()
+                .setBootstrapServers(bootstrapServers)
+                .setTopics(readTopic)
+                .setGroupId(groupId)
+                .setStartingOffsets(OffsetsInitializer.committedOffsets(OffsetResetStrategy.EARLIEST))
+                .setDeserializer(KafkaRecordDeserializationSchema.valueOnly(StringDeserializer.class))
+                .setProperty("scan.topic-partition-discovery.interval", "24h")
+                .setProperty("json.fail-on-missing-field", "true")
+                .setProperty("json.ignore-parse-errors", "true")
                 .build();
-        DataStream<String> stream = env.fromSource(source, WatermarkStrategy.noWatermarks(), "Kafka Source");
-*/
-        return  env.addSource(stringFlinkKafkaConsumer);
+        return env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka Source");
     }
 
 

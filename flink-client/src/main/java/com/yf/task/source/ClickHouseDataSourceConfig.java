@@ -1,7 +1,7 @@
 package com.yf.task.source;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import com.ververica.cdc.connectors.shaded.com.zaxxer.hikari.HikariConfig;
+import com.ververica.cdc.connectors.shaded.com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;

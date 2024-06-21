@@ -17,9 +17,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <commons-lang3.version>3.1</commons-lang3.version>
-        <flink.version>1.17.0</flink.version>
+        <flink.version>1.17.1</flink.version>
         <scala.binary.version>2.12</scala.binary.version>
        <spring.version>5.0.0.RELEASE</spring.version>
+        <vvr.version>1.17-vvr-8.0.4-1</vvr.version>
        <!-- <spring.version>5.3.23</spring.version>-->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -39,7 +40,6 @@
             <artifactId>flink-clients</artifactId>
             <version>${flink.version}</version>
         </dependency>
-
         <!-- Table ecosystem -->
         <dependency>
             <groupId>org.apache.flink</groupId>
@@ -75,7 +75,7 @@
         <!--</exclusions>-->
         <!--</dependency>-->
 
-        <dependency>
+      <!--  <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-connector-kafka</artifactId>
             <version>3.0.0-1.17</version>
@@ -85,6 +85,42 @@
                     <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>-->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-table-planner-loader</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.ververica</groupId>
+            <artifactId>ververica-connector-kafka</artifactId>
+            <version>${vvr.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.ververica</groupId>
+            <artifactId>ververica-connector-mysql</artifactId>
+            <version>${vvr.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.ververica</groupId>
+            <artifactId>ververica-connector-clickhouse</artifactId>
+            <version>1.15-vvr-6.0.2-3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.ververica</groupId>
+            <artifactId>ververica-connector-common</artifactId>
+            <version>${vvr.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.ververica</groupId>
+            <artifactId>ververica-connector-odps</artifactId>
+            <version>${vvr.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+            <version>2.0.49</version>
         </dependency>
 
         <dependency>
@@ -150,12 +186,12 @@
             </exclusions>
         </dependency>
 
-        <dependency>
+  <!--      <dependency>
             <groupId>ru.yandex.clickhouse</groupId>
             <artifactId>clickhouse-jdbc</artifactId>
             <version>0.2.4</version>
         </dependency>
-
+-->
 
         <dependency>
             <groupId>com.alibaba</groupId>
