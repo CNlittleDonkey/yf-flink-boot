@@ -156,7 +156,7 @@ public abstract class BaseFlink {
     public abstract String getPropertiesName();
 
 
-    public abstract void createTopology(StreamExecutionEnvironment builder) throws IOException;
+    public abstract void createTopology(StreamExecutionEnvironment builder) throws Exception;
 
 
     public void run(ParameterTool params) throws Exception {
