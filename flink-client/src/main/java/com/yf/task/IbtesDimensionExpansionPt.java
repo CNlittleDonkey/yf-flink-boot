@@ -1,8 +1,9 @@
+
+
 package com.yf.task;
+
+
 import com.alibaba.fastjson2.JSONObject;
-import com.ververica.cdc.connectors.mysql.source.MySqlSource;
-import com.ververica.cdc.connectors.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-import com.ververica.cdc.debezium.JsonDebeziumDeserializationSchema;
 import com.yf.env.BaseFlink;
 import com.yf.task.pojo.EnergyStorageDimension;
 import com.yf.task.pojo.EnrichedStatMutation;
@@ -10,9 +11,7 @@ import com.yf.task.pojo.StatMutation;
 import com.yf.task.simple.AsyncRedisLookupFunction;
 import com.yf.until.ContainFun;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
-import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.functions.MapFunction;
-import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
@@ -20,40 +19,23 @@ import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.connector.jdbc.JdbcConnectionOptions;
 import org.apache.flink.connector.jdbc.JdbcExecutionOptions;
 import org.apache.flink.connector.jdbc.JdbcSink;
-import org.apache.flink.connector.kafka.sink.KafkaRecordSerializationSchema;
-import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsInitializer;
 import org.apache.flink.connector.kafka.source.reader.deserializer.KafkaRecordDeserializationSchema;
 import org.apache.flink.kafka.shaded.org.apache.kafka.clients.consumer.OffsetResetStrategy;
-import org.apache.flink.kafka.shaded.org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.flink.kafka.shaded.org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.flink.streaming.api.datastream.AsyncDataStream;
-import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.sink.SinkFunction;
-import org.apache.flink.util.Collector;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.StringSerializer;
 
-import javax.annotation.Nullable;
-import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-/**
- * @ClassName Ibtes_Dimension_Expansion_pt
- * @Description TODO
- * @Author xuhaoYF501492
- * @Date 2024/6/20 14:39
- * @Version 1.0
- */
+
+
+
 public class IbtesDimensionExpansionPt extends BaseFlink  {
 
     @Override
@@ -77,7 +59,7 @@ public class IbtesDimensionExpansionPt extends BaseFlink  {
         String bootstrapServers = properties.getProperty("bootstrap.servers", "");
         String inputTopic = properties.getProperty("inputTopic", "");
         String groupId = properties.getProperty("groupId","");
-        String outputTopic = properties.getProperty("outputTopic", "");
+       // String outputTopic = properties.getProperty("outputTopic", "");
         KafkaSource<String> kafkaSource = KafkaSource.<String>builder()
                 .setBootstrapServers(bootstrapServers)
                 .setTopics(inputTopic)
@@ -90,18 +72,7 @@ public class IbtesDimensionExpansionPt extends BaseFlink  {
                 .build();
         DataStreamSource<String> kafkaStream = env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka Source");
 
-
-   /*     // 定义广播状态描述符
-        MapStateDescriptor<String, EnergyStorageDimension> broadcastStateDescriptor =
-                new MapStateDescriptor<>(
-                        "broadcast-state",
-                        TypeInformation.of(String.class),
-                        TypeInformation.of(new TypeHint<EnergyStorageDimension>() {
-                        })
-                );*/
-
         // 创建主数据流
-
         SingleOutputStreamOperator<StatMutation> mainStream = kafkaStream.map(
                         (MapFunction<String, StatMutation>) value -> {
                             try {
@@ -115,7 +86,7 @@ public class IbtesDimensionExpansionPt extends BaseFlink  {
         // 连接主数据流和异步 Redis 查找函数
         SingleOutputStreamOperator<EnrichedStatMutation> resultStream = AsyncDataStream.unorderedWait(
                 mainStream,
-                new AsyncRedisLookupFunction("localhost", 6379),
+                new AsyncRedisLookupFunction("10.10.62.21", 6379,"redis@hckj"),
                 1000,
                 TimeUnit.MILLISECONDS,
                 100
@@ -123,7 +94,7 @@ public class IbtesDimensionExpansionPt extends BaseFlink  {
 
         // 插入到 ClickHouse
         // 插入到 ClickHouse
-        String insertQuery = "INSERT INTO dwd_equ_cdc_meas (" +
+        String insertQuery = "INSERT INTO test_A (" +
                 "measuring_id, aggr_station_id, aggr_station_code, aggr_station_name, station_id, station_code, station_name, station_abbr, " +
                 "prod_series, cabinet_no, emu_sn, sta_capacity, type_id, type_code, type_name, logic_equ_id, logic_equ_code, logic_equ_name, inter_equ, " +
                 "meas_no, quality_code, param_sn, param_id, param_code, param_name, param_type, param_claz, param_value, param_coef_value, coef, " +
@@ -175,13 +146,14 @@ public class IbtesDimensionExpansionPt extends BaseFlink  {
                                 .withMaxRetries(5)
                                 .build(),
                         new JdbcConnectionOptions.JdbcConnectionOptionsBuilder()
-                                .withUrl("jdbc:clickhouse://localhost:8123/your_database")
+                                .withUrl("jdbc:clickhouse://10.10.5.151:8127/de_cloud")
                                 .withDriverName("ru.yandex.clickhouse.ClickHouseDriver")
-                                .withUsername("your_username")
-                                .withPassword("your_password")
+                                .withUsername("default")
+                                .withPassword("123456")
                                 .build()
                 ));
 
         env.execute("Kafka to ClickHouse");
     }
 }
+

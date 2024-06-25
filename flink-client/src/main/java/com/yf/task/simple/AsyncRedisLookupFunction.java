@@ -25,13 +25,15 @@ public class AsyncRedisLookupFunction extends RichAsyncFunction<StatMutation, En
 
     private final String redisHost;
     private final int redisPort;
+    private final String redisPassword;
     private transient Jedis jedis;
     private final ExecutorService executorService;
     private transient Cache<String, EnergyStorageDimension> cache;
 
-    public AsyncRedisLookupFunction(String redisHost, int redisPort) {
+    public AsyncRedisLookupFunction(String redisHost, int redisPort, String redisPassword) {
         this.redisHost = redisHost;
         this.redisPort = redisPort;
+        this.redisPassword = redisPassword;
         this.executorService = Executors.newFixedThreadPool(20);
     }
 
@@ -39,8 +41,11 @@ public class AsyncRedisLookupFunction extends RichAsyncFunction<StatMutation, En
     public void open(Configuration parameters) throws Exception {
         super.open(parameters);
         this.jedis = new Jedis(redisHost, redisPort);
+        if (redisPassword != null && !redisPassword.isEmpty()) {
+            jedis.auth(redisPassword);
+        }
         this.cache = CacheBuilder.newBuilder()
-                .expireAfterWrite(60, TimeUnit.SECONDS)  // 设置缓存过期时间
+                .expireAfterWrite(60, TimeUnit.SECONDS)  // 缓存
                 .maximumSize(100000)
                 .build();
     }
@@ -58,13 +63,13 @@ public class AsyncRedisLookupFunction extends RichAsyncFunction<StatMutation, En
     public void asyncInvoke(StatMutation input, ResultFuture<EnrichedStatMutation> resultFuture) {
         CompletableFuture.supplyAsync(() -> {
             try {
-                String cacheKey = "ibt_energystorage_dimensions_view" + "_" + input.getCabinet() + "_" + input.getEmuSn() + "_" + input.getName();
+                String cacheKey = "de_energystorage_dimensions_table" + "_" + input.getCabinet() + "_" + input.getEmuSn() + "_" + input.getName();
                 EnergyStorageDimension cachedDim = cache.getIfPresent(cacheKey);
                 if (cachedDim != null) {
                     EnrichedStatMutation enrichedStatMutation = createEnrichedStatMutation(input, cachedDim);
                     return enrichedStatMutation;
                 } else {
-                    String redisKey = "ibt_energystorage_dimensions_view";
+                    String redisKey = "de_energystorage_dimensions_table";
                     String redisField = input.getCabinet() + "_" + input.getEmuSn() + "_" + input.getName();
                     String redisValue = jedis.hget(redisKey, redisField);
                     if (redisValue != null) {

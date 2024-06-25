@@ -97,10 +97,27 @@
             <artifactId>ververica-connector-kafka</artifactId>
             <version>${vvr.version}</version>
         </dependency>
-        <dependency>
+    <!--  <dependency>
             <groupId>com.alibaba.ververica</groupId>
             <artifactId>ververica-connector-mysql</artifactId>
-            <version>${vvr.version}</version>
+             <version>1.17-vvr-8.0.4-1</version>
+        </dependency>-->
+  <!--      <dependency>
+             上面是连接 导入包
+             import org.apache.flink.connector.jdbc.JdbcConnectionOptions;
+import org.apache.flink.connector.jdbc.JdbcExecutionOptions;
+import org.apache.flink.connector.jdbc.JdbcSink;
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.28</version> &lt;!&ndash; 请使用最新的稳定版本 &ndash;&gt;
+        </dependency>
+-->
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-jdbc</artifactId>
+            <version>3.0.0-1.16</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.alibaba.ververica</groupId>
@@ -117,11 +134,41 @@
             <artifactId>ververica-connector-odps</artifactId>
             <version>${vvr.version}</version>
         </dependency>
-        <dependency>
+         <dependency>
             <groupId>com.alibaba.ververica</groupId>
             <artifactId>ververica-connector-redis</artifactId>
             <version>1.15-vvr-6.0.6</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ververica</groupId>
+            <artifactId>flink-sql-connector-mysql-cdc</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+
+        <!--<dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.28</version> &lt;!&ndash; 确保使用最新版本 &ndash;&gt;
+        </dependency>-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.6</version>
+        </dependency>
+
+
+      <!--<dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-connector-mysql-cdc</artifactId>
+            <version>${flink.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>mysql</groupId>
+                    <artifactId>mysql-connector-java</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>-->
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
             <artifactId>fastjson2</artifactId>
