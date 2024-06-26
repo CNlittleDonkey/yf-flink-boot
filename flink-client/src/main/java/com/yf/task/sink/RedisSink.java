@@ -9,7 +9,9 @@ import com.ververica.cdc.connectors.shaded.com.fasterxml.jackson.databind.Object
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -54,7 +56,7 @@ public class RedisSink extends RichSinkFunction<String> {
             if (redisPassword != null && !redisPassword.isEmpty()) {
                 jedis.auth(redisPassword);
             }
-
+            //System.out.println("Original JSON: " + value);
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(value);
 
@@ -69,10 +71,14 @@ public class RedisSink extends RichSinkFunction<String> {
                 String redisKey = baseKey + ":" + uniqueKey;
                 Map<String, String> hashMap = new HashMap<>();
                 dataNode.fields().forEachRemaining(entry -> hashMap.put(entry.getKey(), entry.getValue().asText()));
+                Iterator<Map.Entry<String, JsonNode>> fields = dataNode.fields();
+
+
+
                 // 将字段和值保存到 Redis 哈希
                // hashMap.forEach((field, fieldValue) -> jedis.hset(redisKey, field, fieldValue));
                 jedis.hmset(redisKey, hashMap);
-                System.out.println(uniqueKey);
+                //System.out.println(uniqueKey);
             } else if ("d".equals(opType)) {  // 处理删除操作
                 String baseKey = "de_energystorage_dimensions_table";
                 String uniqueKey = jsonNode.get("before").get("cabinet_no").asText() + "_" + jsonNode.get("before").get("emu_sn").asText() + "_" + jsonNode.get("before").get("param_sn").asText();

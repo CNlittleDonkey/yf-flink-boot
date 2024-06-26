@@ -1,16 +1,7 @@
 package com.yf.task.pojo;
-
-import com.yf.until.ContainFun;
-
 import java.math.BigDecimal;
 
-/**
- * @ClassName EnrichedStatMutation
- * @Description TODO
- * @Author xuhaoYF501492
- * @Date 2024/6/21 8:56
- * @Version 1.0
- */
+
 public class EnrichedStatMutation {
     private String measuringId;
     private Long aggrStationId;
@@ -20,9 +11,10 @@ public class EnrichedStatMutation {
     private String stationCode;
     private String stationName;
     private String stationAbbr;
-    private String prodSeries;
+    private Long stationTypeId;
+    private String stationTypeCode;
+    private String interStation;
     private String cabinetNo;
-    private String emuSn;
     private BigDecimal staCapacity;
     private Long typeId;
     private String typeCode;
@@ -30,38 +22,44 @@ public class EnrichedStatMutation {
     private Long logicEquId;
     private String logicEquCode;
     private String logicEquName;
+    private String deviceSn;
+    private Long indicatorTempId;
+    private String model;
+    private Boolean noAlm;
+    private String mainAdvise;
+    private String script;
+    private String relateParamCode;
     private String interEqu;
+    private Boolean custView;
+    private String custAlmName;
+    private String invalidValue;
+    private BigDecimal rangeUpper;
+    private BigDecimal rangeLower;
+    private Long msgRuleId;
+    private String almClaz;
+    private String almLevel;
+    private Boolean faultMonitor;
+    private Long measNo;
+    private String paramSn;
     private Long paramId;
     private String paramCode;
     private String paramType;
     private String paramName;
     private String paramClaz;
+    private BigDecimal paramValue;
     private BigDecimal coef;
-    private String almClaz;
-    private String almLevel;
-    private Boolean noAlm;
-    private Boolean faultMonitor;
-    private String mainAdvise;
-    private BigDecimal rangeUpper;
-    private BigDecimal rangeLower;
-    private String invalidValue;
-    private String expValue;
+    private Long measTime;
     private Boolean recovery;
     private String status;
-    private String paramSn;
-    private BigDecimal paramValue;
-    private BigDecimal paramCoefValue;
-    private long measNo;
-    private long measTime;
     private Long tenantId;
-    private Long msgRuleId;
-    private String script;
-    private String relateParamCode;
-    private Boolean custView;
-    private String custAlmName;
-    private Boolean testAlm;
 
-    public EnrichedStatMutation(String measuringId, Long aggrStationId, String aggrStationCode, String aggrStationName, Long stationId, String stationCode, String stationName, String stationAbbr, String prodSeries, String cabinetNo, String emuSn, BigDecimal staCapacity, Long typeId, String typeCode, String typeName, Long logicEquId, String logicEquCode, String logicEquName, String interEqu, Long paramId, String paramCode, String paramType, String paramName, String paramClaz, BigDecimal coef, String almClaz, String almLevel, Boolean noAlm, Boolean faultMonitor, String mainAdvise, BigDecimal rangeUpper, BigDecimal rangeLower, String invalidValue, String expValue, Boolean recovery, String status, String paramSn, BigDecimal paramValue, BigDecimal paramCoefValue, long measNo, long measTime, Long tenantId, Long msgRuleId, String script, String relateParamCode, Boolean custView, String custAlmName, Boolean testAlm) {
+    // Getters and Setters
+
+
+    public EnrichedStatMutation() {
+    }
+
+    public EnrichedStatMutation(String measuringId, Long aggrStationId, String aggrStationCode, String aggrStationName, Long stationId, String stationCode, String stationName, String stationAbbr, Long stationTypeId, String stationTypeCode, String interStation, String cabinetNo, BigDecimal staCapacity, Long typeId, String typeCode, String typeName, Long logicEquId, String logicEquCode, String logicEquName, String deviceSn, Long indicatorTempId, String model, Boolean noAlm, String mainAdvise, String script, String relateParamCode, String interEqu, Boolean custView, String custAlmName, String invalidValue, BigDecimal rangeUpper, BigDecimal rangeLower, Long msgRuleId, String almClaz, String almLevel, Boolean faultMonitor, Long measNo, String paramSn, Long paramId, String paramCode, String paramType, String paramName, String paramClaz, BigDecimal paramValue, BigDecimal coef, Long measTime, Boolean recovery, String status, Long tenantId) {
         this.measuringId = measuringId;
         this.aggrStationId = aggrStationId;
         this.aggrStationCode = aggrStationCode;
@@ -70,9 +68,10 @@ public class EnrichedStatMutation {
         this.stationCode = stationCode;
         this.stationName = stationName;
         this.stationAbbr = stationAbbr;
-        this.prodSeries = prodSeries;
+        this.stationTypeId = stationTypeId;
+        this.stationTypeCode = stationTypeCode;
+        this.interStation = interStation;
         this.cabinetNo = cabinetNo;
-        this.emuSn = emuSn;
         this.staCapacity = staCapacity;
         this.typeId = typeId;
         this.typeCode = typeCode;
@@ -80,36 +79,36 @@ public class EnrichedStatMutation {
         this.logicEquId = logicEquId;
         this.logicEquCode = logicEquCode;
         this.logicEquName = logicEquName;
+        this.deviceSn = deviceSn;
+        this.indicatorTempId = indicatorTempId;
+        this.model = model;
+        this.noAlm = noAlm;
+        this.mainAdvise = mainAdvise;
+        this.script = script;
+        this.relateParamCode = relateParamCode;
         this.interEqu = interEqu;
+        this.custView = custView;
+        this.custAlmName = custAlmName;
+        this.invalidValue = invalidValue;
+        this.rangeUpper = rangeUpper;
+        this.rangeLower = rangeLower;
+        this.msgRuleId = msgRuleId;
+        this.almClaz = almClaz;
+        this.almLevel = almLevel;
+        this.faultMonitor = faultMonitor;
+        this.measNo = measNo;
+        this.paramSn = paramSn;
         this.paramId = paramId;
         this.paramCode = paramCode;
         this.paramType = paramType;
         this.paramName = paramName;
         this.paramClaz = paramClaz;
+        this.paramValue = paramValue;
         this.coef = coef;
-        this.almClaz = almClaz;
-        this.almLevel = almLevel;
-        this.noAlm = noAlm;
-        this.faultMonitor = faultMonitor;
-        this.mainAdvise = mainAdvise;
-        this.rangeUpper = rangeUpper;
-        this.rangeLower = rangeLower;
-        this.invalidValue = invalidValue;
-        this.expValue = expValue;
+        this.measTime = measTime;
         this.recovery = recovery;
         this.status = status;
-        this.paramSn = paramSn;
-        this.paramValue = paramValue;
-        this.paramCoefValue = paramCoefValue;
-        this.measNo = measNo;
-        this.measTime = measTime;
         this.tenantId = tenantId;
-        this.msgRuleId = msgRuleId;
-        this.script = script;
-        this.relateParamCode = relateParamCode;
-        this.custView = custView;
-        this.custAlmName = custAlmName;
-        this.testAlm = testAlm;
     }
 
     public String getMeasuringId() {
@@ -176,12 +175,28 @@ public class EnrichedStatMutation {
         this.stationAbbr = stationAbbr;
     }
 
-    public String getProdSeries() {
-        return prodSeries;
+    public Long getStationTypeId() {
+        return stationTypeId;
     }
 
-    public void setProdSeries(String prodSeries) {
-        this.prodSeries = prodSeries;
+    public void setStationTypeId(Long stationTypeId) {
+        this.stationTypeId = stationTypeId;
+    }
+
+    public String getStationTypeCode() {
+        return stationTypeCode;
+    }
+
+    public void setStationTypeCode(String stationTypeCode) {
+        this.stationTypeCode = stationTypeCode;
+    }
+
+    public String getInterStation() {
+        return interStation;
+    }
+
+    public void setInterStation(String interStation) {
+        this.interStation = interStation;
     }
 
     public String getCabinetNo() {
@@ -190,14 +205,6 @@ public class EnrichedStatMutation {
 
     public void setCabinetNo(String cabinetNo) {
         this.cabinetNo = cabinetNo;
-    }
-
-    public String getEmuSn() {
-        return emuSn;
-    }
-
-    public void setEmuSn(String emuSn) {
-        this.emuSn = emuSn;
     }
 
     public BigDecimal getStaCapacity() {
@@ -256,12 +263,156 @@ public class EnrichedStatMutation {
         this.logicEquName = logicEquName;
     }
 
+    public String getDeviceSn() {
+        return deviceSn;
+    }
+
+    public void setDeviceSn(String deviceSn) {
+        this.deviceSn = deviceSn;
+    }
+
+    public Long getIndicatorTempId() {
+        return indicatorTempId;
+    }
+
+    public void setIndicatorTempId(Long indicatorTempId) {
+        this.indicatorTempId = indicatorTempId;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public Boolean getNoAlm() {
+        return noAlm;
+    }
+
+    public void setNoAlm(Boolean noAlm) {
+        this.noAlm = noAlm;
+    }
+
+    public String getMainAdvise() {
+        return mainAdvise;
+    }
+
+    public void setMainAdvise(String mainAdvise) {
+        this.mainAdvise = mainAdvise;
+    }
+
+    public String getScript() {
+        return script;
+    }
+
+    public void setScript(String script) {
+        this.script = script;
+    }
+
+    public String getRelateParamCode() {
+        return relateParamCode;
+    }
+
+    public void setRelateParamCode(String relateParamCode) {
+        this.relateParamCode = relateParamCode;
+    }
+
     public String getInterEqu() {
         return interEqu;
     }
 
     public void setInterEqu(String interEqu) {
         this.interEqu = interEqu;
+    }
+
+    public Boolean getCustView() {
+        return custView;
+    }
+
+    public void setCustView(Boolean custView) {
+        this.custView = custView;
+    }
+
+    public String getCustAlmName() {
+        return custAlmName;
+    }
+
+    public void setCustAlmName(String custAlmName) {
+        this.custAlmName = custAlmName;
+    }
+
+    public String getInvalidValue() {
+        return invalidValue;
+    }
+
+    public void setInvalidValue(String invalidValue) {
+        this.invalidValue = invalidValue;
+    }
+
+    public BigDecimal getRangeUpper() {
+        return rangeUpper;
+    }
+
+    public void setRangeUpper(BigDecimal rangeUpper) {
+        this.rangeUpper = rangeUpper;
+    }
+
+    public BigDecimal getRangeLower() {
+        return rangeLower;
+    }
+
+    public void setRangeLower(BigDecimal rangeLower) {
+        this.rangeLower = rangeLower;
+    }
+
+    public Long getMsgRuleId() {
+        return msgRuleId;
+    }
+
+    public void setMsgRuleId(Long msgRuleId) {
+        this.msgRuleId = msgRuleId;
+    }
+
+    public String getAlmClaz() {
+        return almClaz;
+    }
+
+    public void setAlmClaz(String almClaz) {
+        this.almClaz = almClaz;
+    }
+
+    public String getAlmLevel() {
+        return almLevel;
+    }
+
+    public void setAlmLevel(String almLevel) {
+        this.almLevel = almLevel;
+    }
+
+    public Boolean getFaultMonitor() {
+        return faultMonitor;
+    }
+
+    public void setFaultMonitor(Boolean faultMonitor) {
+        this.faultMonitor = faultMonitor;
+    }
+
+    public Long getMeasNo() {
+        return measNo;
+    }
+
+    public void setMeasNo(Long measNo) {
+        this.measNo = measNo;
+    }
+
+    public String getParamSn() {
+        return paramSn;
+    }
+
+    public void setParamSn(String paramSn) {
+        this.paramSn = paramSn;
     }
 
     public Long getParamId() {
@@ -304,6 +455,14 @@ public class EnrichedStatMutation {
         this.paramClaz = paramClaz;
     }
 
+    public BigDecimal getParamValue() {
+        return paramValue;
+    }
+
+    public void setParamValue(BigDecimal paramValue) {
+        this.paramValue = paramValue;
+    }
+
     public BigDecimal getCoef() {
         return coef;
     }
@@ -312,76 +471,12 @@ public class EnrichedStatMutation {
         this.coef = coef;
     }
 
-    public String getAlmClaz() {
-        return almClaz;
+    public Long getMeasTime() {
+        return measTime;
     }
 
-    public void setAlmClaz(String almClaz) {
-        this.almClaz = almClaz;
-    }
-
-    public String getAlmLevel() {
-        return almLevel;
-    }
-
-    public void setAlmLevel(String almLevel) {
-        this.almLevel = almLevel;
-    }
-
-    public Boolean getNoAlm() {
-        return noAlm;
-    }
-
-    public void setNoAlm(Boolean noAlm) {
-        this.noAlm = noAlm;
-    }
-
-    public Boolean getFaultMonitor() {
-        return faultMonitor;
-    }
-
-    public void setFaultMonitor(Boolean faultMonitor) {
-        this.faultMonitor = faultMonitor;
-    }
-
-    public String getMainAdvise() {
-        return mainAdvise;
-    }
-
-    public void setMainAdvise(String mainAdvise) {
-        this.mainAdvise = mainAdvise;
-    }
-
-    public BigDecimal getRangeUpper() {
-        return rangeUpper;
-    }
-
-    public void setRangeUpper(BigDecimal rangeUpper) {
-        this.rangeUpper = rangeUpper;
-    }
-
-    public BigDecimal getRangeLower() {
-        return rangeLower;
-    }
-
-    public void setRangeLower(BigDecimal rangeLower) {
-        this.rangeLower = rangeLower;
-    }
-
-    public String getInvalidValue() {
-        return invalidValue;
-    }
-
-    public void setInvalidValue(String invalidValue) {
-        this.invalidValue = invalidValue;
-    }
-
-    public String getExpValue() {
-        return expValue;
-    }
-
-    public void setExpValue(String expValue) {
-        this.expValue = expValue;
+    public void setMeasTime(Long measTime) {
+        this.measTime = measTime;
     }
 
     public Boolean getRecovery() {
@@ -400,46 +495,6 @@ public class EnrichedStatMutation {
         this.status = status;
     }
 
-    public String getParamSn() {
-        return paramSn;
-    }
-
-    public void setParamSn(String paramSn) {
-        this.paramSn = paramSn;
-    }
-
-    public BigDecimal getParamValue() {
-        return paramValue;
-    }
-
-    public void setParamValue(BigDecimal paramValue) {
-        this.paramValue = paramValue;
-    }
-
-    public BigDecimal getParamCoefValue() {
-        return paramCoefValue;
-    }
-
-    public void setParamCoefValue(BigDecimal paramCoefValue) {
-        this.paramCoefValue = paramCoefValue;
-    }
-
-    public long getMeasNo() {
-        return measNo;
-    }
-
-    public void setMeasNo(long measNo) {
-        this.measNo = measNo;
-    }
-
-    public long getMeasTime() {
-        return measTime;
-    }
-
-    public void setMeasTime(long measTime) {
-        this.measTime = measTime;
-    }
-
     public Long getTenantId() {
         return tenantId;
     }
@@ -447,52 +502,5 @@ public class EnrichedStatMutation {
     public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
     }
-
-    public Long getMsgRuleId() {
-        return msgRuleId;
-    }
-
-    public void setMsgRuleId(Long msgRuleId) {
-        this.msgRuleId = msgRuleId;
-    }
-
-    public String getScript() {
-        return script;
-    }
-
-    public void setScript(String script) {
-        this.script = script;
-    }
-
-    public String getRelateParamCode() {
-        return relateParamCode;
-    }
-
-    public void setRelateParamCode(String relateParamCode) {
-        this.relateParamCode = relateParamCode;
-    }
-
-    public Boolean getCustView() {
-        return custView;
-    }
-
-    public void setCustView(Boolean custView) {
-        this.custView = custView;
-    }
-
-    public String getCustAlmName() {
-        return custAlmName;
-    }
-
-    public void setCustAlmName(String custAlmName) {
-        this.custAlmName = custAlmName;
-    }
-
-    public Boolean getTestAlm() {
-        return testAlm;
-    }
-
-    public void setTestAlm(Boolean testAlm) {
-        this.testAlm = testAlm;
-    }
 }
+

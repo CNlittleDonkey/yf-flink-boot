@@ -29,6 +29,7 @@ public class IbtesDimensionFromMysqlToRedis {
             StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
             Properties jdbcProperties = new Properties();
             jdbcProperties.put("zeroDateTimeBehavior", "convertToNull");
+            jdbcProperties.put("decimal.handling.mode", "string");
             // 创建MySQL CDC Source
             MySqlSource<String> mySqlSource = MySqlSource.<String>builder()
                     .hostname("10.10.5.163")
@@ -37,6 +38,7 @@ public class IbtesDimensionFromMysqlToRedis {
                     .tableList("de_equ.de_energystorage_dimensions_table")
                     .username("gscndev")
                     .password("YFgscn123..")
+                    .debeziumProperties(jdbcProperties)
                     .deserializer(new JsonDebeziumDeserializationSchema())
                     .startupOptions(StartupOptions.initial())
                     .build();

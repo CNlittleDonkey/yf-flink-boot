@@ -2,13 +2,6 @@ package com.yf.task.pojo;
 
 import java.math.BigDecimal;
 
-/**
- * @ClassName EnergyStorageDimension
- * @Description TODO
- * @Author xuhaoYF501492
- * @Date 2024/6/20 17:12
- * @Version 1.0
- */
 public class EnergyStorageDimension {
     private String measuringId;
     private Long aggrStationId;
@@ -17,8 +10,10 @@ public class EnergyStorageDimension {
     private Long stationId;
     private String stationCode;
     private String stationName;
+    private Long stationTypeId;
+    private String stationTypeCode;
+    private String interStation;
     private String stationAbbr;
-    private String prodSeries;
     private BigDecimal staCapacity;
     private Long typeId;
     private String typeCode;
@@ -26,6 +21,8 @@ public class EnergyStorageDimension {
     private Long logicEquId;
     private String logicEquCode;
     private String logicEquName;
+    private Long indicatorTempId;
+    private String model;
     private String interEqu;
     private Long paramId;
     private String paramCode;
@@ -53,9 +50,11 @@ public class EnergyStorageDimension {
     private String relateParamCode;
     private Boolean custView;
     private String custAlmName;
-    private Boolean testAlm;
 
-    public EnergyStorageDimension(String measuringId, Long aggrStationId, String aggrStationCode, String aggrStationName, Long stationId, String stationCode, String stationName, String stationAbbr, String prodSeries, BigDecimal staCapacity, Long typeId, String typeCode, String typeName, Long logicEquId, String logicEquCode, String logicEquName, String interEqu, Long paramId, String paramCode, String paramType, String paramName, String paramClaz, BigDecimal coef, String almClaz, String almLevel, Boolean noAlm, Boolean faultMonitor, String mainAdvise, BigDecimal rangeUpper, BigDecimal rangeLower, String invalidValue, String expValue, Boolean recovery, String status, String emuSn, String cabinetNo, String paramSn, Long tenantId, Long msgRuleId, String script, String relateParamCode, Boolean custView, String custAlmName, Boolean testAlm) {
+    public EnergyStorageDimension() {
+    }
+
+    public EnergyStorageDimension(String measuringId, Long aggrStationId, String aggrStationCode, String aggrStationName, Long stationId, String stationCode, String stationName, Long stationTypeId, String stationTypeCode, String interStation, String stationAbbr, BigDecimal staCapacity, Long typeId, String typeCode, String typeName, Long logicEquId, String logicEquCode, String logicEquName, Long indicatorTempId, String model, String interEqu, Long paramId, String paramCode, String paramType, String paramName, String paramClaz, BigDecimal coef, String almClaz, String almLevel, Boolean noAlm, Boolean faultMonitor, String mainAdvise, BigDecimal rangeUpper, BigDecimal rangeLower, String invalidValue, String expValue, Boolean recovery, String status, String emuSn, String cabinetNo, String paramSn, Long tenantId, Long msgRuleId, String script, String relateParamCode, Boolean custView, String custAlmName) {
         this.measuringId = measuringId;
         this.aggrStationId = aggrStationId;
         this.aggrStationCode = aggrStationCode;
@@ -63,8 +62,10 @@ public class EnergyStorageDimension {
         this.stationId = stationId;
         this.stationCode = stationCode;
         this.stationName = stationName;
+        this.stationTypeId = stationTypeId;
+        this.stationTypeCode = stationTypeCode;
+        this.interStation = interStation;
         this.stationAbbr = stationAbbr;
-        this.prodSeries = prodSeries;
         this.staCapacity = staCapacity;
         this.typeId = typeId;
         this.typeCode = typeCode;
@@ -72,6 +73,8 @@ public class EnergyStorageDimension {
         this.logicEquId = logicEquId;
         this.logicEquCode = logicEquCode;
         this.logicEquName = logicEquName;
+        this.indicatorTempId = indicatorTempId;
+        this.model = model;
         this.interEqu = interEqu;
         this.paramId = paramId;
         this.paramCode = paramCode;
@@ -99,11 +102,6 @@ public class EnergyStorageDimension {
         this.relateParamCode = relateParamCode;
         this.custView = custView;
         this.custAlmName = custAlmName;
-        this.testAlm = testAlm;
-    }
-
-    public EnergyStorageDimension() {
-
     }
 
     public String getMeasuringId() {
@@ -162,20 +160,36 @@ public class EnergyStorageDimension {
         this.stationName = stationName;
     }
 
+    public Long getStationTypeId() {
+        return stationTypeId;
+    }
+
+    public void setStationTypeId(Long stationTypeId) {
+        this.stationTypeId = stationTypeId;
+    }
+
+    public String getStationTypeCode() {
+        return stationTypeCode;
+    }
+
+    public void setStationTypeCode(String stationTypeCode) {
+        this.stationTypeCode = stationTypeCode;
+    }
+
+    public String getInterStation() {
+        return interStation;
+    }
+
+    public void setInterStation(String interStation) {
+        this.interStation = interStation;
+    }
+
     public String getStationAbbr() {
         return stationAbbr;
     }
 
     public void setStationAbbr(String stationAbbr) {
         this.stationAbbr = stationAbbr;
-    }
-
-    public String getProdSeries() {
-        return prodSeries;
-    }
-
-    public void setProdSeries(String prodSeries) {
-        this.prodSeries = prodSeries;
     }
 
     public BigDecimal getStaCapacity() {
@@ -232,6 +246,22 @@ public class EnergyStorageDimension {
 
     public void setLogicEquName(String logicEquName) {
         this.logicEquName = logicEquName;
+    }
+
+    public Long getIndicatorTempId() {
+        return indicatorTempId;
+    }
+
+    public void setIndicatorTempId(Long indicatorTempId) {
+        this.indicatorTempId = indicatorTempId;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
 
     public String getInterEqu() {
@@ -448,13 +478,5 @@ public class EnergyStorageDimension {
 
     public void setCustAlmName(String custAlmName) {
         this.custAlmName = custAlmName;
-    }
-
-    public Boolean getTestAlm() {
-        return testAlm;
-    }
-
-    public void setTestAlm(Boolean testAlm) {
-        this.testAlm = testAlm;
     }
 }

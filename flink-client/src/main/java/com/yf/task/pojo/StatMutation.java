@@ -1,27 +1,35 @@
 package com.yf.task.pojo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-/**
- * @ClassName StatMutation
- * @Description TODO
- * @Author xuhaoYF501492
- * @Date 2024/6/20 17:07
- * @Version 1.0
- */
-public class StatMutation {
+public class StatMutation implements Serializable {
+    private long time;
     private String station;
-    private String cabinet;
-    private String emuSn;
+    private String emu_sn;
+    private String cabinet_no;
     private String name;
     private BigDecimal raw;
-    private long time;
-    public StatMutation(String station, String cabinet, String emuSn, String name, BigDecimal raw, long time) {
+
+    // Getters and setters
+
+    public StatMutation() {
+    }
+
+    public StatMutation(long time, String station, String emu_sn, String cabinet_no, String name, BigDecimal raw) {
+        this.time = time;
         this.station = station;
-        this.cabinet = cabinet;
-        this.emuSn = emuSn;
+        this.emu_sn = emu_sn;
+        this.cabinet_no = cabinet_no;
         this.name = name;
         this.raw = raw;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -33,20 +41,20 @@ public class StatMutation {
         this.station = station;
     }
 
-    public String getCabinet() {
-        return cabinet;
+    public String getEmu_sn() {
+        return emu_sn;
     }
 
-    public void setCabinet(String cabinet) {
-        this.cabinet = cabinet;
+    public void setEmu_sn(String emu_sn) {
+        this.emu_sn = emu_sn;
     }
 
-    public String getEmuSn() {
-        return emuSn;
+    public String getCabinet_no() {
+        return cabinet_no;
     }
 
-    public void setEmuSn(String emuSn) {
-        this.emuSn = emuSn;
+    public void setCabinet_no(String cabinet_no) {
+        this.cabinet_no = cabinet_no;
     }
 
     public String getName() {
@@ -63,13 +71,5 @@ public class StatMutation {
 
     public void setRaw(BigDecimal raw) {
         this.raw = raw;
-    }
-
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
     }
 }

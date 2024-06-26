@@ -16,6 +16,7 @@ import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.common.typeinfo.Types;
+import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.connector.jdbc.JdbcConnectionOptions;
 import org.apache.flink.connector.jdbc.JdbcExecutionOptions;
 import org.apache.flink.connector.jdbc.JdbcSink;
@@ -29,14 +30,13 @@ import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
-
-
-public class IbtesDimensionExpansionPt extends BaseFlink  {
+public class IbtesDimensionExpansionPt extends BaseFlink {
 
     @Override
     public String getJobName() {
@@ -45,12 +45,19 @@ public class IbtesDimensionExpansionPt extends BaseFlink  {
 
     @Override
     public String getConfigName() {
-        return null;
+        return "topology-clickhouse.xml";
+
     }
 
     @Override
     public String getPropertiesName() {
-        return null;
+        return "config.properties";
+
+    }
+
+    public static void main(String[] args) throws Exception {
+        IbtesDimensionExpansionPt topo = new IbtesDimensionExpansionPt();
+        topo.run(ParameterTool.fromArgs(args));
     }
 
     @Override
@@ -58,11 +65,11 @@ public class IbtesDimensionExpansionPt extends BaseFlink  {
 
         String bootstrapServers = properties.getProperty("bootstrap.servers", "");
         String inputTopic = properties.getProperty("inputTopic", "");
-        String groupId = properties.getProperty("groupId","");
-       // String outputTopic = properties.getProperty("outputTopic", "");
+        String groupId = properties.getProperty("groupId", "");
+        // String outputTopic = properties.getProperty("outputTopic", "");
         KafkaSource<String> kafkaSource = KafkaSource.<String>builder()
                 .setBootstrapServers(bootstrapServers)
-                .setTopics(inputTopic)
+                .setTopics("de_cloud_stat_mutation_measuring")
                 .setGroupId(groupId)
                 .setStartingOffsets(OffsetsInitializer.committedOffsets(OffsetResetStrategy.EARLIEST))
                 .setDeserializer(KafkaRecordDeserializationSchema.valueOnly(StringDeserializer.class))
@@ -71,7 +78,7 @@ public class IbtesDimensionExpansionPt extends BaseFlink  {
                 .setProperty("json.ignore-parse-errors", "true")
                 .build();
         DataStreamSource<String> kafkaStream = env.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka Source");
-
+        kafkaStream.print();
         // 创建主数据流
         SingleOutputStreamOperator<StatMutation> mainStream = kafkaStream.map(
                         (MapFunction<String, StatMutation>) value -> {
@@ -81,24 +88,25 @@ public class IbtesDimensionExpansionPt extends BaseFlink  {
                                 return null;
                             }
                         }).filter(Objects::nonNull)
-                .returns(Types.POJO(StatMutation.class));
+                .returns(StatMutation.class);
 
         // 连接主数据流和异步 Redis 查找函数
         SingleOutputStreamOperator<EnrichedStatMutation> resultStream = AsyncDataStream.unorderedWait(
                 mainStream,
-                new AsyncRedisLookupFunction("10.10.62.21", 6379,"redis@hckj"),
+                new AsyncRedisLookupFunction( "foreverLuky99"),
                 1000,
                 TimeUnit.MILLISECONDS,
                 100
-        ).returns(Types.POJO(EnrichedStatMutation.class));  // 确保返回类型正确
+        ).returns(EnrichedStatMutation.class);  // 确保返回类型正确
+        System.out.println(resultStream.toString());
+        // 插入到 ClickHouse
 
-        // 插入到 ClickHouse
-        // 插入到 ClickHouse
         String insertQuery = "INSERT INTO test_A (" +
                 "measuring_id, aggr_station_id, aggr_station_code, aggr_station_name, station_id, station_code, station_name, station_abbr, " +
-                "prod_series, cabinet_no, emu_sn, sta_capacity, type_id, type_code, type_name, logic_equ_id, logic_equ_code, logic_equ_name, inter_equ, " +
-                "meas_no, quality_code, param_sn, param_id, param_code, param_name, param_type, param_claz, param_value, param_coef_value, coef, " +
-                "meas_time, recovery, status, create_time, tenant_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "station_type_id, station_type_code, inter_station, cabinet_no, sta_capacity, type_id, type_code, type_name, logic_equ_id, logic_equ_code, logic_equ_name, " +
+                "device_sn, indicator_temp_id, model, inter_equ, meas_no, quality_code, param_sn, param_id, param_code, param_type, param_name, param_claz, " +
+                "param_value, param_coef_value, coef, meas_time, recovery, status, create_time, tenant_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         resultStream.addSink(
                 JdbcSink.sink(
@@ -112,33 +120,55 @@ public class IbtesDimensionExpansionPt extends BaseFlink  {
                             statement.setString(6, enrichedStatMutation.getStationCode());
                             statement.setString(7, enrichedStatMutation.getStationName());
                             statement.setString(8, enrichedStatMutation.getStationAbbr());
-                            statement.setString(9, enrichedStatMutation.getProdSeries());
-                            statement.setString(10, enrichedStatMutation.getCabinetNo());
-                            statement.setString(11, enrichedStatMutation.getEmuSn());
-                            statement.setBigDecimal(12, enrichedStatMutation.getStaCapacity());
-                            statement.setLong(13, enrichedStatMutation.getTypeId());
-                            statement.setString(14, enrichedStatMutation.getTypeCode());
-                            statement.setString(15, enrichedStatMutation.getTypeName());
-                            statement.setLong(16, enrichedStatMutation.getLogicEquId());
-                            statement.setString(17, enrichedStatMutation.getLogicEquCode());
-                            statement.setString(18, enrichedStatMutation.getLogicEquName());
-                            statement.setString(19, enrichedStatMutation.getInterEqu());
-                            statement.setLong(20, enrichedStatMutation.getMeasNo());
-                            statement.setInt(21, ContainFun.calculateQualityCode(enrichedStatMutation.getParamValue(),enrichedStatMutation.getInvalidValue(),enrichedStatMutation.getRangeUpper(),enrichedStatMutation.getRangeLower()));
-                            statement.setString(22, enrichedStatMutation.getParamSn());
-                            statement.setLong(23, enrichedStatMutation.getParamId());
-                            statement.setString(24, enrichedStatMutation.getParamCode());
-                            statement.setString(25, enrichedStatMutation.getParamName());
-                            statement.setString(26, enrichedStatMutation.getParamType());
-                            statement.setString(27, enrichedStatMutation.getParamClaz());
-                            statement.setBigDecimal(28, enrichedStatMutation.getParamValue());
-                            statement.setBigDecimal(29, enrichedStatMutation.getParamCoefValue());
-                            statement.setBigDecimal(30, enrichedStatMutation.getCoef());
-                            statement.setTimestamp(31, new Timestamp(enrichedStatMutation.getMeasTime()));
-                            statement.setBoolean(32, enrichedStatMutation.getRecovery());
-                            statement.setString(33, enrichedStatMutation.getStatus());
-                            statement.setTimestamp(34, new Timestamp(System.currentTimeMillis()));
-                            statement.setLong(35, enrichedStatMutation.getTenantId());
+                            statement.setLong(9, enrichedStatMutation.getStationTypeId());
+                            statement.setString(10, enrichedStatMutation.getStationTypeCode());
+                            statement.setString(11, enrichedStatMutation.getInterStation());
+                            statement.setString(12, enrichedStatMutation.getCabinetNo());
+                            statement.setBigDecimal(13, enrichedStatMutation.getStaCapacity());
+                            statement.setLong(14, enrichedStatMutation.getTypeId());
+                            statement.setString(15, enrichedStatMutation.getTypeCode());
+                            statement.setString(16, enrichedStatMutation.getTypeName());
+                            statement.setLong(17, enrichedStatMutation.getLogicEquId());
+                            statement.setString(18, enrichedStatMutation.getLogicEquCode());
+                            statement.setString(19, enrichedStatMutation.getLogicEquName());
+                            statement.setString(20, enrichedStatMutation.getDeviceSn());
+                            statement.setLong(21, enrichedStatMutation.getIndicatorTempId());
+                            statement.setString(22, enrichedStatMutation.getModel());
+                            statement.setString(23, enrichedStatMutation.getInterEqu());
+                            statement.setLong(24, enrichedStatMutation.getMeasNo());
+
+                            // Calculate quality_code
+                            BigDecimal paramValue = enrichedStatMutation.getParamValue();
+                            String invalidValue = enrichedStatMutation.getInvalidValue();
+                            BigDecimal rangeUpper = enrichedStatMutation.getRangeUpper();
+                            BigDecimal rangeLower = enrichedStatMutation.getRangeLower();
+
+                            int qualityCode = 0;
+                            if (ContainFun.valFun(paramValue.toString(), invalidValue)) {
+                                qualityCode = 2;
+                            } else if (rangeUpper != null && paramValue.compareTo(rangeUpper) > 0 || rangeLower != null && paramValue.compareTo(rangeLower) < 0) {
+                                qualityCode = 1;
+                            } else if (!ContainFun.valFun(paramValue.toString(), invalidValue) || ((rangeUpper != null && paramValue.compareTo(rangeUpper) <= 0 && rangeLower != null && paramValue.compareTo(rangeLower) >= 0) || (rangeUpper == null && rangeLower == null))) {
+                                qualityCode = 0;
+                            } else {
+                                qualityCode = 3;
+                            }
+                            statement.setInt(25, qualityCode);
+
+                            statement.setString(26, enrichedStatMutation.getParamSn());
+                            statement.setLong(27, enrichedStatMutation.getParamId());
+                            statement.setString(28, enrichedStatMutation.getParamCode());
+                            statement.setString(29, enrichedStatMutation.getParamType());
+                            statement.setString(30, enrichedStatMutation.getParamName());
+                            statement.setString(31, enrichedStatMutation.getParamClaz());
+                            statement.setBigDecimal(32, enrichedStatMutation.getParamValue());
+                            statement.setBigDecimal(33, enrichedStatMutation.getParamValue().multiply(enrichedStatMutation.getCoef()));
+                            statement.setBigDecimal(34, enrichedStatMutation.getCoef());
+                            statement.setTimestamp(35, new Timestamp(enrichedStatMutation.getMeasTime()));
+                            statement.setBoolean(36, enrichedStatMutation.getRecovery());
+                            statement.setString(37, enrichedStatMutation.getStatus());
+                            statement.setTimestamp(38, new Timestamp(System.currentTimeMillis()));
+                            statement.setLong(39, enrichedStatMutation.getTenantId());
                         },
                         JdbcExecutionOptions.builder()
                                 .withBatchSize(1000)
@@ -152,8 +182,8 @@ public class IbtesDimensionExpansionPt extends BaseFlink  {
                                 .withPassword("123456")
                                 .build()
                 ));
-
-        env.execute("Kafka to ClickHouse");
     }
+
 }
+
 

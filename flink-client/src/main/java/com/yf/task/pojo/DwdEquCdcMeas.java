@@ -1,15 +1,8 @@
 package com.yf.task.pojo;
 
 import java.math.BigDecimal;
-import java.security.Timestamp;
+import java.time.LocalDateTime;
 
-/**
- * @ClassName DwdEquCdcMeas
- * @Description TODO
- * @Author xuhaoYF501492
- * @Date 2024/6/20 17:26
- * @Version 1.0
- */
 public class DwdEquCdcMeas {
     private String measuringId;
     private Long aggrStationId;
@@ -19,71 +12,39 @@ public class DwdEquCdcMeas {
     private String stationCode;
     private String stationName;
     private String stationAbbr;
-    private String prodSeries;
+    private Long stationTypeId;
+    private String stationTypeCode;
+    private String interStation;
     private String cabinetNo;
-    private String emuSn;
-    private BigDecimal staCapacity;
     private Long typeId;
     private String typeCode;
     private String typeName;
+    private BigDecimal staCapacity;
     private Long logicEquId;
     private String logicEquCode;
     private String logicEquName;
+    private String deviceSn;
+    private Long indicatorTempId;
+    private String model;
     private String interEqu;
-    private Long measNo;
-    private Long qualityCode;
-    private String paramSn;
+    private Integer measNo;
     private Long paramId;
     private String paramCode;
+    private String paramSn;
     private String paramName;
     private String paramType;
     private String paramClaz;
+    private BigDecimal coef;
     private BigDecimal paramValue;
     private BigDecimal paramCoefValue;
-    private BigDecimal coef;
-    private Timestamp measTime;
+    private Long qualityCode;
+    private LocalDateTime measTime;
     private Boolean recovery;
     private String status;
-    private Timestamp createTime;
+    private LocalDateTime createTime;
     private Long tenantId;
 
-    public DwdEquCdcMeas(String measuringId, Long aggrStationId, String aggrStationCode, String aggrStationName, Long stationId, String stationCode, String stationName, String stationAbbr, String prodSeries, String cabinetNo, String emuSn, BigDecimal staCapacity, Long typeId, String typeCode, String typeName, Long logicEquId, String logicEquCode, String logicEquName, String interEqu, Long measNo, Long qualityCode, String paramSn, Long paramId, String paramCode, String paramName, String paramType, String paramClaz, BigDecimal paramValue, BigDecimal paramCoefValue, BigDecimal coef, Timestamp measTime, Boolean recovery, String status, Timestamp createTime, Long tenantId) {
-        this.measuringId = measuringId;
-        this.aggrStationId = aggrStationId;
-        this.aggrStationCode = aggrStationCode;
-        this.aggrStationName = aggrStationName;
-        this.stationId = stationId;
-        this.stationCode = stationCode;
-        this.stationName = stationName;
-        this.stationAbbr = stationAbbr;
-        this.prodSeries = prodSeries;
-        this.cabinetNo = cabinetNo;
-        this.emuSn = emuSn;
-        this.staCapacity = staCapacity;
-        this.typeId = typeId;
-        this.typeCode = typeCode;
-        this.typeName = typeName;
-        this.logicEquId = logicEquId;
-        this.logicEquCode = logicEquCode;
-        this.logicEquName = logicEquName;
-        this.interEqu = interEqu;
-        this.measNo = measNo;
-        this.qualityCode = qualityCode;
-        this.paramSn = paramSn;
-        this.paramId = paramId;
-        this.paramCode = paramCode;
-        this.paramName = paramName;
-        this.paramType = paramType;
-        this.paramClaz = paramClaz;
-        this.paramValue = paramValue;
-        this.paramCoefValue = paramCoefValue;
-        this.coef = coef;
-        this.measTime = measTime;
-        this.recovery = recovery;
-        this.status = status;
-        this.createTime = createTime;
-        this.tenantId = tenantId;
-    }
+    // Getters and Setters
 
     public String getMeasuringId() {
         return measuringId;
@@ -149,12 +110,28 @@ public class DwdEquCdcMeas {
         this.stationAbbr = stationAbbr;
     }
 
-    public String getProdSeries() {
-        return prodSeries;
+    public Long getStationTypeId() {
+        return stationTypeId;
     }
 
-    public void setProdSeries(String prodSeries) {
-        this.prodSeries = prodSeries;
+    public void setStationTypeId(Long stationTypeId) {
+        this.stationTypeId = stationTypeId;
+    }
+
+    public String getStationTypeCode() {
+        return stationTypeCode;
+    }
+
+    public void setStationTypeCode(String stationTypeCode) {
+        this.stationTypeCode = stationTypeCode;
+    }
+
+    public String getInterStation() {
+        return interStation;
+    }
+
+    public void setInterStation(String interStation) {
+        this.interStation = interStation;
     }
 
     public String getCabinetNo() {
@@ -163,22 +140,6 @@ public class DwdEquCdcMeas {
 
     public void setCabinetNo(String cabinetNo) {
         this.cabinetNo = cabinetNo;
-    }
-
-    public String getEmuSn() {
-        return emuSn;
-    }
-
-    public void setEmuSn(String emuSn) {
-        this.emuSn = emuSn;
-    }
-
-    public BigDecimal getStaCapacity() {
-        return staCapacity;
-    }
-
-    public void setStaCapacity(BigDecimal staCapacity) {
-        this.staCapacity = staCapacity;
     }
 
     public Long getTypeId() {
@@ -205,6 +166,14 @@ public class DwdEquCdcMeas {
         this.typeName = typeName;
     }
 
+    public BigDecimal getStaCapacity() {
+        return staCapacity;
+    }
+
+    public void setStaCapacity(BigDecimal staCapacity) {
+        this.staCapacity = staCapacity;
+    }
+
     public Long getLogicEquId() {
         return logicEquId;
     }
@@ -229,6 +198,30 @@ public class DwdEquCdcMeas {
         this.logicEquName = logicEquName;
     }
 
+    public String getDeviceSn() {
+        return deviceSn;
+    }
+
+    public void setDeviceSn(String deviceSn) {
+        this.deviceSn = deviceSn;
+    }
+
+    public Long getIndicatorTempId() {
+        return indicatorTempId;
+    }
+
+    public void setIndicatorTempId(Long indicatorTempId) {
+        this.indicatorTempId = indicatorTempId;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
     public String getInterEqu() {
         return interEqu;
     }
@@ -237,28 +230,12 @@ public class DwdEquCdcMeas {
         this.interEqu = interEqu;
     }
 
-    public Long getMeasNo() {
+    public Integer getMeasNo() {
         return measNo;
     }
 
-    public void setMeasNo(Long measNo) {
+    public void setMeasNo(Integer measNo) {
         this.measNo = measNo;
-    }
-
-    public Long getQualityCode() {
-        return qualityCode;
-    }
-
-    public void setQualityCode(Long qualityCode) {
-        this.qualityCode = qualityCode;
-    }
-
-    public String getParamSn() {
-        return paramSn;
-    }
-
-    public void setParamSn(String paramSn) {
-        this.paramSn = paramSn;
     }
 
     public Long getParamId() {
@@ -275,6 +252,14 @@ public class DwdEquCdcMeas {
 
     public void setParamCode(String paramCode) {
         this.paramCode = paramCode;
+    }
+
+    public String getParamSn() {
+        return paramSn;
+    }
+
+    public void setParamSn(String paramSn) {
+        this.paramSn = paramSn;
     }
 
     public String getParamName() {
@@ -301,6 +286,14 @@ public class DwdEquCdcMeas {
         this.paramClaz = paramClaz;
     }
 
+    public BigDecimal getCoef() {
+        return coef;
+    }
+
+    public void setCoef(BigDecimal coef) {
+        this.coef = coef;
+    }
+
     public BigDecimal getParamValue() {
         return paramValue;
     }
@@ -317,19 +310,19 @@ public class DwdEquCdcMeas {
         this.paramCoefValue = paramCoefValue;
     }
 
-    public BigDecimal getCoef() {
-        return coef;
+    public Long getQualityCode() {
+        return qualityCode;
     }
 
-    public void setCoef(BigDecimal coef) {
-        this.coef = coef;
+    public void setQualityCode(Long qualityCode) {
+        this.qualityCode = qualityCode;
     }
 
-    public Timestamp getMeasTime() {
+    public LocalDateTime getMeasTime() {
         return measTime;
     }
 
-    public void setMeasTime(Timestamp measTime) {
+    public void setMeasTime(LocalDateTime measTime) {
         this.measTime = measTime;
     }
 
@@ -349,11 +342,11 @@ public class DwdEquCdcMeas {
         this.status = status;
     }
 
-    public Timestamp getCreateTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Timestamp createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
